@@ -1,6 +1,6 @@
 # BlockTracker
 This is a bot for tracking cryptocurrencies prices and portfolios.
-Here are used free CoinGecko API, so information is only available for top 250 cryptocurrencies.
+Here I use free CoinGecko API, so information is only available for top 250 cryptocurrencies.
 ## For developer
 ### In order to launch this project you need to:
 - Refer to dao classes to create database.
