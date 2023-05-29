@@ -3,6 +3,7 @@ package org.vitaliistf;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -35,11 +36,13 @@ public class BlockTracker extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId().toString());
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(update.getMessage().getChatId().toString());
+            Message message = update.getMessage();
+            message.setText(message.getText().trim());
             try {
-                message.setText(new DispatcherController().handle(update.getMessage(), message));
-                execute(message);
+                sendMessage.setText(DispatcherController.handle(message, sendMessage));
+                execute(sendMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }

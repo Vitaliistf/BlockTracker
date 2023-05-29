@@ -1,6 +1,6 @@
 package org.vitaliistf.models;
 
-import org.vitaliistf.dao.CoinDao;
+import org.vitaliistf.services.CoinService;
 import org.vitaliistf.util.PrintFormatter;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public class Portfolio {
 
     @Override
     public String toString() {
-        List<Coin> coinList = new CoinDao().getCoinsByPortfolioId(id);
+        List<Coin> coinList = new CoinService().getCoinsByPortfolioId(id);
         if(coinList.isEmpty()) {
             return "\nYou don't have any coin here.";
         } else {

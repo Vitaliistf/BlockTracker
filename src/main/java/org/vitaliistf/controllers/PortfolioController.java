@@ -3,7 +3,7 @@ package org.vitaliistf.controllers;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.vitaliistf.dao.PortfolioDao;
+import org.vitaliistf.services.PortfolioService;
 import org.vitaliistf.util.PrintFormatter;
 import org.vitaliistf.menu.Menu;
 import org.vitaliistf.models.Portfolio;
@@ -36,12 +36,12 @@ public class PortfolioController {
 
     private static String deletePortfolio(Message message) {
         String request = message.getText();
-        PortfolioDao portfolioDao = new PortfolioDao();
-        List<Portfolio> portfolioList = portfolioDao.getByUserId(message.getChatId());
+        PortfolioService portfolioService = new PortfolioService();
+        List<Portfolio> portfolioList = portfolioService.getByUserId(message.getChatId());
 
         for(Portfolio portfolio : portfolioList) {
             if(portfolio.getName().equals(request.substring(21))) {
-                portfolioDao.delete(portfolio);
+                portfolioService.delete(portfolio);
                 return "\uD83D\uDFE2 Portfolio " + portfolio.getName() + " was deleted successfully.";
             }
         }
@@ -50,7 +50,7 @@ public class PortfolioController {
 
     private static String showPortfolio(Message message, SendMessage sendMessage) {
         StringBuilder result = new StringBuilder();
-        List<Portfolio> portfolioList = new PortfolioDao().getByUserId(message.getChatId());
+        List<Portfolio> portfolioList = new PortfolioService().getByUserId(message.getChatId());
         String portfolioName = message.getText().substring(3);
         for(Portfolio portfolio : portfolioList) {
             if(portfolio.getId().equals(message.getChatId() + portfolioName)) {
@@ -70,7 +70,7 @@ public class PortfolioController {
     private static String showAllPortfolios(Message message, SendMessage sendMessage) {
         long chatId = message.getChatId();
         StringBuilder response = new StringBuilder();
-        List<Portfolio> portfolioList = new PortfolioDao().getByUserId(chatId);
+        List<Portfolio> portfolioList = new PortfolioService().getByUserId(chatId);
         response.append("\uD83D\uDCBC Your portfolios:\n");
         if(portfolioList.isEmpty()) {
             response.append("\nYou don't have any portfolio here.");
@@ -92,11 +92,11 @@ public class PortfolioController {
 
     public static String addNewPortfolio(Message message) {
         Session session = UserSessionManager.getSession(message.getChatId());
-        PortfolioDao portfolioDao = new PortfolioDao();
-        if (portfolioDao.getById(message.getChatId()+message.getText()).isPresent()) {
+        PortfolioService portfolioService = new PortfolioService();
+        if (portfolioService.getById(message.getChatId()+message.getText()).isPresent()) {
             return "\uD83D\uDD34 Invalid input. It seems like you have portfolio with such name.";
         } else {
-            portfolioDao.save(new Portfolio(message.getChatId(), message.getText(), new ArrayList<>()));
+            portfolioService.save(new Portfolio(message.getChatId(), message.getText(), new ArrayList<>()));
         }
         session.clearAttributes();
         return "\uD83D\uDFE2 New portfolio \"" + message.getText() + "\" has been created.";

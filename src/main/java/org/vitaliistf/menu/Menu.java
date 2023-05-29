@@ -2,7 +2,7 @@ package org.vitaliistf.menu;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.vitaliistf.dao.PortfolioDao;
+import org.vitaliistf.services.PortfolioService;
 import org.vitaliistf.models.Portfolio;
 
 import java.util.ArrayList;
@@ -78,8 +78,8 @@ public class Menu {
     }
 
     public static ReplyKeyboardMarkup getAllPortfoliosMenuKeyboard(long userId){
-        PortfolioDao portfolioDao = new PortfolioDao();
-        List<Portfolio> portfolios = portfolioDao.getByUserId(userId);
+        PortfolioService portfolioService = new PortfolioService();
+        List<Portfolio> portfolios = portfolioService.getByUserId(userId);
         String[][] buttons = new String[portfolios.size()+2][1];
 
         int i = 0;

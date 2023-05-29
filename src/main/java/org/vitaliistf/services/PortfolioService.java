@@ -1,4 +1,4 @@
-package org.vitaliistf.dao;
+package org.vitaliistf.services;
 
 import org.vitaliistf.AppConfiguration;
 import org.vitaliistf.models.Coin;
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PortfolioDao {
+public class PortfolioService {
 
     Connection connection;
 
-    public PortfolioDao() {
+    public PortfolioService() {
         try {
             this.connection = DriverManager.getConnection(AppConfiguration.DB_URL, AppConfiguration.DB_USER , AppConfiguration.DB_PASSWORD);
         } catch (SQLException e) {
@@ -28,10 +28,10 @@ public class PortfolioDao {
             statement.execute();
             ResultSet set = statement.getResultSet();
 
-            CoinDao coinDao = new CoinDao();
+            CoinService coinService = new CoinService();
             List<Coin> coinList;
             if(set.next()) {
-                coinList = coinDao.getCoinsByPortfolioId(id);
+                coinList = coinService.getCoinsByPortfolioId(id);
                 Portfolio portfolio = new Portfolio(set.getLong(2), set.getString(1), coinList);
                 return Optional.of(portfolio);
             }
@@ -48,10 +48,10 @@ public class PortfolioDao {
             statement.execute();
             ResultSet set = statement.getResultSet();
 
-            CoinDao coinDao = new CoinDao();
+            CoinService coinService = new CoinService();
             List<Coin> coinList;
             while(set.next()) {
-                coinList = coinDao.getCoinsByPortfolioId(set.getString(1));
+                coinList = coinService.getCoinsByPortfolioId(set.getString(1));
                 Portfolio portfolio = new Portfolio(set.getLong(2), set.getString(3), coinList);
                 portfolioList.add(portfolio);
             }
@@ -86,13 +86,13 @@ public class PortfolioDao {
         try(PreparedStatement statement = connection.prepareStatement("DELETE FROM Portfolio WHERE id = ?")) {
             statement.setString(1, portfolio.getId());
             statement.execute();
-            CoinDao coinDao = new CoinDao();
-            for(Coin coin : coinDao.getCoinsByPortfolioId(portfolio.getId())) {
-                coinDao.delete(coin);
+            CoinService coinService = new CoinService();
+            for(Coin coin : coinService.getCoinsByPortfolioId(portfolio.getId())) {
+                coinService.delete(coin);
             }
-            TransactionDao transactionDao = new TransactionDao();
-            for(Transaction transaction : transactionDao.getByPortfolioId(portfolio.getId())) {
-                transactionDao.delete(transaction);
+            TransactionService transactionService = new TransactionService();
+            for(Transaction transaction : transactionService.getByPortfolioId(portfolio.getId())) {
+                transactionService.delete(transaction);
             }
         } catch (SQLException e) {
             e.printStackTrace();

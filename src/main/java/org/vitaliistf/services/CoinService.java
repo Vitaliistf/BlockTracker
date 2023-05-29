@@ -1,4 +1,4 @@
-package org.vitaliistf.dao;
+package org.vitaliistf.services;
 
 import org.vitaliistf.AppConfiguration;
 import org.vitaliistf.models.Coin;
@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CoinDao {
+public class CoinService {
     Connection connection;
 
-    public CoinDao() {
+    public CoinService() {
         try {
             this.connection = DriverManager.getConnection(AppConfiguration.DB_URL, AppConfiguration.DB_USER , AppConfiguration.DB_PASSWORD);
         } catch (SQLException e) {

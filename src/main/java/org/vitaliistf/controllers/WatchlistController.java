@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.vitaliistf.BlockTracker;
-import org.vitaliistf.dao.WatchlistDao;
+import org.vitaliistf.services.WatchlistService;
 import org.vitaliistf.util.PrintFormatter;
 import org.vitaliistf.coingecko.CG;
 import org.vitaliistf.menu.Menu;
@@ -45,7 +45,7 @@ public class WatchlistController {
 
     private static String showWatchlist(Message message, SendMessage sendMessage) {
         StringBuilder response = new StringBuilder();
-        List<String> coins = new WatchlistDao().getByUserId(message.getChatId());
+        List<String> coins = new WatchlistService().getByUserId(message.getChatId());
         List<CoinInfo> coinInfoList = CG.getWatchlistInfo(coins);
 
         if(coins.isEmpty()) {
@@ -93,11 +93,11 @@ public class WatchlistController {
 
     public static String addCoin(Message message) {
         Session session = UserSessionManager.getSession(message.getChatId());
-        WatchlistDao watchlistDao = new WatchlistDao();
+        WatchlistService watchlistService = new WatchlistService();
         if (CG.getPriceUSD(message.getText().toUpperCase()) <= 0) {
             return INVALID_COIN;
         } else {
-            watchlistDao.save(message.getChatId(), message.getText());
+            watchlistService.save(message.getChatId(), message.getText());
         }
 
         session.clearAttributes();
@@ -106,11 +106,11 @@ public class WatchlistController {
 
     public static String removeCoin(Message message) {
         Session session = UserSessionManager.getSession(message.getChatId());
-        WatchlistDao watchlistDao = new WatchlistDao();
+        WatchlistService watchlistService = new WatchlistService();
         if (CG.getPriceUSD(message.getText().toUpperCase()) <= 0) {
             return INVALID_COIN;
         } else {
-            watchlistDao.delete(message.getChatId(), message.getText());
+            watchlistService.delete(message.getChatId(), message.getText());
         }
 
         session.clearAttributes();

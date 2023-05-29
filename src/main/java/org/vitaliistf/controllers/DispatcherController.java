@@ -10,7 +10,7 @@ public class DispatcherController {
 
     public static final String INVALID_INPUT = "\uD83D\uDD34 Invalid input. Try again.";
 
-    public String handle(Message message, SendMessage sendMessage) {
+    public static String handle(Message message, SendMessage sendMessage) {
         String result;
         String request = message.getText();
         sendMessage.setReplyMarkup(Menu.getMainMenuKeyboard());
@@ -23,7 +23,7 @@ public class DispatcherController {
         return result;
     }
 
-    private String handleCommand(Message message, SendMessage sendMessage) {
+    private static String handleCommand(Message message, SendMessage sendMessage) {
         Session session = UserSessionManager.getSession(message.getChatId());
         session.clearAttributes();
         String request = message.getText().toLowerCase();
@@ -43,7 +43,7 @@ public class DispatcherController {
         }
     }
 
-    private String handleNotCommand(Message message, SendMessage sendMessage) {
+    private static String handleNotCommand(Message message, SendMessage sendMessage) {
         Session session = UserSessionManager.getSession(message.getChatId());
         String command = (String) session.getAttribute("command");
 

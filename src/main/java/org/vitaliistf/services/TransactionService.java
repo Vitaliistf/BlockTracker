@@ -1,4 +1,4 @@
-package org.vitaliistf.dao;
+package org.vitaliistf.services;
 
 import org.vitaliistf.AppConfiguration;
 import org.vitaliistf.models.Coin;
@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TransactionDao {
+public class TransactionService {
 
     Connection connection;
 
-    public TransactionDao() {
+    public TransactionService() {
         try {
             this.connection = DriverManager.getConnection(AppConfiguration.DB_URL, AppConfiguration.DB_USER , AppConfiguration.DB_PASSWORD);
         } catch (SQLException e) {
@@ -50,8 +50,8 @@ public class TransactionDao {
 
     public void save(Transaction transaction) {
         try {
-            CoinDao coinDao = new CoinDao();
-            Optional<Coin> coinOptional = coinDao.getById(transaction.getPortfolioId() + transaction.getSymbol());
+            CoinService coinService = new CoinService();
+            Optional<Coin> coinOptional = coinService.getById(transaction.getPortfolioId() + transaction.getSymbol());
             String symbol = transaction.getSymbol();
             double amount;
             String portfolioId = transaction.getPortfolioId();
@@ -68,7 +68,7 @@ public class TransactionDao {
                 value = transaction.getAmount() * transaction.getPrice();
             }
             avgBuyingPrice = value / amount;
-            coinDao.save(new Coin(symbol, amount, portfolioId, avgBuyingPrice));
+            coinService.save(new Coin(symbol, amount, portfolioId, avgBuyingPrice));
 
             PreparedStatement statement;
 

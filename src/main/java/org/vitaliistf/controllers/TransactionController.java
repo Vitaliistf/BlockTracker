@@ -3,8 +3,8 @@ package org.vitaliistf.controllers;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.vitaliistf.dao.PortfolioDao;
-import org.vitaliistf.dao.TransactionDao;
+import org.vitaliistf.services.PortfolioService;
+import org.vitaliistf.services.TransactionService;
 import org.vitaliistf.util.PrintFormatter;
 import org.vitaliistf.coingecko.CG;
 import org.vitaliistf.menu.Menu;
@@ -46,8 +46,8 @@ public class TransactionController {
         StringBuilder result = new StringBuilder("Transactions in ");
         result.append(message.getText().substring(21))
                 .append(":\n\n");
-        TransactionDao transactionDao = new TransactionDao();
-        List<Transaction> transactionList = transactionDao.getByPortfolioId(message.getChatId() +
+        TransactionService transactionService = new TransactionService();
+        List<Transaction> transactionList = transactionService.getByPortfolioId(message.getChatId() +
                 message.getText().substring(21));
         result.append("<pre>")
                 .append(PrintFormatter.formatString("Buy/sell", 9))
@@ -97,8 +97,8 @@ public class TransactionController {
                     session.getAttribute("transactionSymbol").toString().toUpperCase() + ":";
 
         } else {
-            TransactionDao transactionDao = new TransactionDao();
-            transactionDao.save(new Transaction(
+            TransactionService transactionService = new TransactionService();
+            transactionService.save(new Transaction(
                     message.getChatId(),
                     ((String) session.getAndRemoveAttribute("transactionPortfolioId")),
                     ((String) session.getAndRemoveAttribute("transactionSymbol")),
@@ -113,10 +113,10 @@ public class TransactionController {
     }
 
     public static boolean isCoinPresentInPortfolio(String symbol, String portfolioId, double amount) {
-        PortfolioDao portfolioDao = new PortfolioDao();
+        PortfolioService portfolioService = new PortfolioService();
         Portfolio portfolio;
-        if(portfolioDao.getById(portfolioId).isPresent()) {
-            portfolio = portfolioDao.getById(portfolioId).get();
+        if(portfolioService.getById(portfolioId).isPresent()) {
+            portfolio = portfolioService.getById(portfolioId).get();
         } else {
             return false;
         }

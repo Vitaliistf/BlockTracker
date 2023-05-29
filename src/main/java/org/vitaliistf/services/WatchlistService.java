@@ -1,4 +1,4 @@
-package org.vitaliistf.dao;
+package org.vitaliistf.services;
 
 import org.vitaliistf.AppConfiguration;
 
@@ -6,11 +6,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WatchlistDao {
+public class WatchlistService {
 
     Connection connection;
 
-    public WatchlistDao() {
+    public WatchlistService() {
         try {
             this.connection = DriverManager.getConnection(AppConfiguration.DB_URL, AppConfiguration.DB_USER , AppConfiguration.DB_PASSWORD);
         } catch (SQLException e) {
