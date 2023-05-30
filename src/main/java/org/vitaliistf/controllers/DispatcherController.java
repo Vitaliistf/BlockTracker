@@ -14,7 +14,9 @@ public class DispatcherController {
         String result;
         String request = message.getText();
         sendMessage.setReplyMarkup(Menu.getMainMenuKeyboard());
-        if(request.startsWith("\uD83D")) {
+        if(request.startsWith("/start")) {
+            result = greeting();
+        } else if(request.startsWith("\uD83D")) {
             result = handleCommand(message, sendMessage);
         } else {
             result = handleNotCommand(message, sendMessage);
@@ -69,6 +71,13 @@ public class DispatcherController {
             default:
                 return INVALID_INPUT;
         }
+    }
+
+    private static String greeting() {
+        return "\uD83E\uDE99 Welcome to BlockTracker! \uD83E\uDE99\n" +
+                "Repository: https://github.com/Vitaliistf/BlockTracker\n" +
+                "The main things this bot can do are described in README on GitHub.\n" +
+                "Anyway, it is also fine to explore bot yourself.\uD83D\uDE0E";
     }
 
 }
