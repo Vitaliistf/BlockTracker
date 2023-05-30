@@ -55,7 +55,7 @@ public class Coin {
     }
 
     public double getPNLPercent() {
-        return (getPNL()/ getValue())*100;
+        return (getPNL() / getInvested()) * 100;
     }
 
     public double getInvested() {
@@ -67,8 +67,7 @@ public class Coin {
         return "\uD83D\uDD38" +
                 PrintFormatter.formatString(symbol, 6) +
                 PrintFormatter.formatNumber(amount) +
-                PrintFormatter.formatNumber(getValue()) +
-                "USD  " +
+                PrintFormatter.formatCurrencyWithOverflow(getValue()) +
                 PrintFormatter.formatPercent(getPNLPercent());
     }
 }

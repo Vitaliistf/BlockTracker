@@ -15,7 +15,11 @@ public class PrintFormatter {
     }
 
     public static String formatPercent(double number) {
-        return String.format("%.2f", number) + "%";
+        if(Double.isNaN(number)) {
+            return "0%";
+        } else {
+            return String.format("%.2f", number) + "%";
+        }
     }
 
     public static String formatString(String input, int spaces) {
@@ -24,6 +28,20 @@ public class PrintFormatter {
 
     public static String getFullLengthNumber(double number) {
         return BigDecimal.valueOf(number).toPlainString();
+    }
+
+    public static String formatCurrency(double number) {
+        return "$" + String.format("%.2f", number);
+    }
+
+    public static String formatCurrencyWithOverflow(double number) {
+        String temp;
+        if(String.format("%.2f", number).length() < 12) {
+            temp = String.format("%.2f", number);
+        } else {
+            temp = String.format("%9.1e", number);
+        }
+        return String.format("%-14s", "$" + temp.trim());
     }
 
     public static String formatDate(String date) {

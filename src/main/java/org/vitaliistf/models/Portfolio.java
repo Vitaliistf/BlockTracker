@@ -53,11 +53,7 @@ public class Portfolio {
     }
 
     public double getPNLPercent() {
-        double result = 0;
-        for(Coin coin : coins) {
-            result += coin.getPNLPercent();
-        }
-        return result;
+        return (getPNL() / getInvested()) * 100;
     }
 
     @Override
@@ -80,11 +76,9 @@ public class Portfolio {
             }
             result.append("</pre>")
                     .append("\n\nPNL: ")
-                    .append(PrintFormatter.formatNumber(getPNL()))
-                    .append("USD")
+                    .append(PrintFormatter.formatCurrency(getPNL()))
                     .append("\nInvested: ")
-                    .append(PrintFormatter.formatNumber(getInvested()))
-                    .append("USD");
+                    .append(PrintFormatter.formatCurrency(getInvested()));
             return result.toString();
         }
     }
@@ -100,8 +94,7 @@ public class Portfolio {
     public String generalToString() {
         return "\uD83D\uDCBC" +
                 PrintFormatter.formatString(name, 11) +
-                PrintFormatter.formatNumber(getPortfolioValue()) +
-                "USD  " +
+                PrintFormatter.formatCurrencyWithOverflow(getPortfolioValue()) +
                 PrintFormatter.formatPercent(getPNLPercent());
     }
 }
